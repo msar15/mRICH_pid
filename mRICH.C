@@ -3,17 +3,16 @@
 using namespace std;
 
 
-mRICH::mRICH(double trackResolution, double timePrecision, double pix, double p)
+mRICH::mRICH(double trackResolution, double incidentAngle, double pix, double p)
 {
 	
   // In this arameterization we assume that the particle enters the mRICH perpendicular to its front face. More realistic case will be implemented in the subsequent updates.
 
 
   fTrackResolution = trackResolution;
-  fTimePrecision = timePrecision;
   mom     = p;
-  pLow    = 3;
-  pHigh   = 10.1;
+  pLow    = 0;
+  pHigh   = 10.;
   c       = 0.0299792458;  // cm/picosecond
   n       = 1.03; //Aerogel
   a       = pix;// pixel size 3.0; // mm -- one side
@@ -27,16 +26,26 @@ mRICH::mRICH(double trackResolution, double timePrecision, double pix, double p)
   L       = 3.0;//Aerogel block thickness in cm
 
   //===============
-  th0 = 0.; //incidence angle in radians
+  th0 = incidentAngle; //incidence angle in radians
 
-  //Angle difference 
-  double dth = getAng(mPion) - getAng(mKaon);
-  //Detector uncertainty 
-  double sigTh = sqrt(pow(getdAng(mPion),2)+pow(getdAng(mKaon),2));
-  //Global uncertainty
-  double sigThTrk = sqrt(pow(getdAngTrk(mPion),2)+pow(getdAngTrk(mKaon),2));
-  double sigThc = sqrt(pow(sigTh/sqrt(getNgamma(L,mKaon)),2)+pow(sigThTrk,2));
-  Nsigma = dth/sigThc;
+  double dth = 0.,  dth_epi = 0.;
+  Nsigma = 0., Nsigma_epi = 0.;
+  if(mom>2.) {
+    dth = getAng(mPion) - getAng(mKaon);
+    //Detector uncertainty 
+    double sigTh = sqrt(pow(getdAng(mPion),2)+pow(getdAng(mKaon),2));
+    //Global uncertainty
+    double sigThTrk = getdAngTrk(mKaon);
+    double sigThc = sqrt(pow(sigTh/sqrt(getNgamma(L,mPion)),2)+pow(sigThTrk,2));
+    Nsigma = dth/sigThc;
+  }
+  if(mom>0.58) {
+    dth_epi = getAng(mElectron) - getAng(mPion);
+    double sigTh_epi = sqrt(pow(getdAng(mElectron),2)+pow(getdAng(mPion),2));
+    double sigThTrk_epi = getdAngTrk(mPion);
+    double sigThc_epi = sqrt(pow(sigTh_epi/sqrt(getNgamma(L,mElectron)),2)+pow(sigThTrk_epi,2));
+    Nsigma_epi = dth_epi/sigThc_epi;
+  }
 
 #if 0
   //From simulations
