@@ -18,6 +18,7 @@ mRICH::mRICH(double trackResolution, double incidentAngle, double pix, double p)
   a       = pix;// pixel size 3.0; // mm -- one side
   f       = 152.4; //focal length mm =  6"
   N_gam   = 10;
+  mElectron = 0.00051099895;    //GeV/c^2
   mPion   = 0.13957018;    //GeV/c^2
   mKaon   = 0.493677;      //GeV/c^2
   mProton = 0.93827208816; //GeV/c^2
