@@ -17,9 +17,7 @@ void RUNME()
   gStyle->SetOptStat(0);
 
   //  Add as many detectors as your heart desires....
-  Detectors.push_back( new mRICH(0.00175, 1, 1, mom) ); //  5 psec @ 150 cm
-  Detectors.push_back( new mRICH(0.00175, 1, 2, mom) ); // 10 psec @ 100 cm
-  Detectors.push_back( new mRICH(0.00175, 1, 3, mom) ); // 20 psec @ 100 cm
+  Detectors.push_back( new mRICH(0.00175, 1, 3, mom) ); // 1.74 mrad tracking recolution & 3 mm pixel size
   
   //  Select the booking criterion for the performance plot.
   TH1* Performance = new TH1D("Performance","Performance",100,-6,6);  // Format for detector Performance.
